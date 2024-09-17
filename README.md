@@ -37,5 +37,11 @@ This application uses **Flask** as the backend framework, and **MySQL** for data
 ## Related Projects
 - stay tuned for more projects 
 
+
+## Images
+![alt text](<Screenshot (98).png>)
+![alt text](<Screenshot (97).png>)
+
 ## Licensing
 This project is licensed under the MIT License. See the LICENSE file for more information.
+
