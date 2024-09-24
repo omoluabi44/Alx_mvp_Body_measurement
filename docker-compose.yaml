@@ -1,0 +1,130 @@
+# # # Comments are provided throughout this file to help you get started.
+# # # If you need more help, visit the Docker Compose reference guide at
+# # # https://docs.docker.com/go/compose-spec-reference/
+
+# # # Here the instructions define your application as a service called "server".
+# # # This service is built from the Dockerfile in the current directory.
+# # # You can add other services your application may depend on here, such as a
+# # # database or a cache. For examples, see the Awesome Compose repository:
+# # # https://github.com/docker/awesome-compose
+# # # services:
+# # #   server:
+# # #     build:
+# # #       context: .
+# # #     ports:
+# # #       - 8000:8000
+
+# # # The commented out section below is an example of how to define a PostgreSQL
+# # # database that your application can use. `depends_on` tells Docker Compose to
+# # # start the database before your application. The `db-data` volume persists the
+# # # database data between container restarts. The `db-password` secret is used
+# # # to set the database password. You must create `db/password.txt` and add
+# # # a password of your choosing to it before running `docker compose up`.
+# #     depends_on:
+# #       db:
+# #         condition: service_healthy
+# #   db:
+# #     image: postgres
+# #     restart: always
+# #     user: postgres
+# #     # secrets:
+# #     #   - db-password
+# #     # volumes:
+# #     #   - db-data:/var/lib/postgresql/data
+# #     environment:
+# #       - BDYM_MYSQL_DB=bdyb_dev_db
+# #       - BDYM_MYSQL_USER=body_Msr_dev
+# #       - BDYM_MYSQL_PWD='Mr!engineer44' 
+# #       # - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+# #     ports:
+# #       - "3306:3306"
+# # #     expose:
+# # #       - 5432
+# # #     healthcheck:
+# # #       test: [ "CMD", "pg_isready" ]
+# # #       interval: 10s
+# # #       timeout: 5s
+# # #       retries: 5
+# # # volumes:
+# # #   db-data:
+# # # secrets:
+# # #   db-password:
+# # #     file: db/password.txt
+# services:
+#   db:
+#     image: mysql:5.7
+#     environment:
+#       - MYSQL_ROOT_PASSWORD=Mr!engineer44
+#       - BDYM_MYSQL_DB=bdyb_dev_db
+#       - BDYM_MYSQL_USER=body_Msr_dev
+#       - BDYM_MYSQL_PWD=Mr!engineer44
+#     ports:
+#       - "3306:3306"
+#     networks:
+#       - app-network
+#     healthcheck:
+#       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+
+#   web:
+#     build: .
+#     env_file:
+#       - .env
+#     ports:
+#       - "5000:5000"
+#     depends_on:
+#       - db
+#     networks:
+#       - app-network
+# networks:
+#   app-network:
+
+
+
+
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bdyb_dev_db  # Use MYSQL_DATABASE instead of BDYM_MYSQL_DB
+      # - MYSQL_USER=body_Msr_dev  # Use MYSQL_USER instead of BDYM_MYSQL_USER
+      # - MYSQL_PASSWORD=Mr_engineer44  # Use MYSQL_PASSWORD instead of BDYM_MYSQL_PWD
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: ./web
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy  # Wait for MySQL to be healthy
+    networks:
+      - app-network
+  api:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "5001:5001"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+networks:
+  app-network:

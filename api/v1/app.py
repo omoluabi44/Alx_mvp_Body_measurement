@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from model.__init__ import storage
+from web.model.__init__ import storage
 from api.v1.views import app_views
 from os import getenv
 from flask_cors import CORS

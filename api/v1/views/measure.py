@@ -1,7 +1,7 @@
 from api.v1.views import app_views
 from flask import jsonify, make_response, abort, request
-from model import storage
-from model.users_measure import Measurement
+from web.model import storage
+from web.model.users_measure import Measurement
 from werkzeug.utils import secure_filename
 import os
 
